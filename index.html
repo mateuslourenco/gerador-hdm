@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador HDM</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            margin-bottom: 5px;
+        }
+
+        body {
+            max-width: 600px;
+            margin: auto;
+            background-color: lightskyblue;
+        }
+
+        main {
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 400px;
+            width: 100%;
+            margin-top: 100px;
+            padding: 10px;
+            border-radius: 30px;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.473);
+        }
+
+        .types {
+            width: 30%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type=text] {
+            width: calc(100% / 2 - 68px);
+            height: 30px;
+            border-radius: 20px;
+            border: 1px solid black;
+            text-align: center;
+        }
+
+        #gerador {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #gerador input {
+            margin-right: 5px;
+        }
+
+        #resultado input {
+            width: calc(100% - 130px);
+        }
+
+        button {
+            cursor: pointer;
+            width: 120px;
+            height: 30px;
+            border-radius: 20px;
+            border: none;
+            background-color: paleturquoise;
+        }
+
+        button:hover:enabled {
+            background-color: #2196F3;
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>Gerador HDM</h1>
+        <div id="exclusive">
+            <div class="types">
+                <label>
+                    Default
+                    <input type="radio" name="type" id="default" checked onclick="checkIsOther5G()">
+                </label>
+            </div>
+            <div class="types">
+                <label>
+                    Somente 5.0GHz
+                    <input type="radio" name="type" id="only5" onclick="checkIsOther5G()">
+                </label>
+            </div>
+            <div class="types">
+                <label>
+                    5.0GHz diferente
+                    <input type="radio" name="type" id="other5" onclick="checkIsOther5G()">
+                </label>
+            </div>
+
+        </div>
+        <div id="gerador">
+            <input type="text" id="ssid" placeholder="SSID">
+            <input type="text" id="password" placeholder="Password">
+            <button onclick="createJSON()" id="create">Gerar</button>
+        </div>
+        <div id="resultado">
+            <div id="doisQuPontoatro">
+                <input type="text" id="result2" readonly="readonly">
+                <button onclick="copy('result2')" id="btn-result2">Copiar 2.4GHz</button>
+            </div>
+            <div id="cincoPontoZero">
+                <input type="text" id="result5" readonly="readonly">
+                <button onclick="copy('result5')" id="btn-result5">Copiar 5.0GHz</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        function createInputSSID5G(parent) {
+            const ssid5 = document.createElement('input')
+            Object.assign(ssid5, {
+                type: 'text',
+                id: 'ssid5',
+                placeholder: 'SSID 5.0GHz'
+            })
+            parent.appendChild(ssid5)
+        }
+        function createInputPassword5G(parent) {
+            const pw5 = document.createElement('input')
+            Object.assign(pw5, {
+                type: 'text',
+                id: 'password5',
+                placeholder: 'Password 5.0GHz'
+            })
+            parent.appendChild(pw5)
+        }
+        function removeInput5G(parent) {
+            const ssid5 = document.getElementById('ssid5') || undefined
+            const password5 = document.getElementById('password5') || undefined
+            if (ssid5 != undefined) {
+                parent.removeChild(ssid5)
+                parent.removeChild(password5)
+            }
+        }
+        function checkIsOther5G() {
+            limparResultado()
+            const checkBox = document.getElementById('other5')
+            const parent = document.getElementById('gerador')
+
+            if (checkBox.checked == true) {
+                createInputSSID5G(parent)
+                createInputPassword5G(parent)
+            } else {
+                removeInput5G(parent)
+            }
+        }
+        function createJSON() {
+
+            const isOnly5 = document.getElementById("only5").checked
+            const isOther5 = document.getElementById('other5').checked
+
+            reset5G()
+            reset2G()
+            limparResultado()
+            const ssid = document.getElementById('ssid').value
+            const password = document.getElementById('password').value
+            
+            if (ssid == "" || password == "") {
+                alert("Digite o SSID e Senha!!")
+                limparDados()
+                return false
+            } else if (password.length < 8) {
+                alert("Senha precisa ter mais que oito digitos!")
+                limparDados()
+                return false
+            }
+
+            const createWifi2 = (ssid1, password1) => JSON.stringify({ index: "1", ssid: ssid1, password: password1 })
+            const createWifi5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`, password: password1 })
+            const createOnly5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: ssid1, password: password1 })
+
+            if (isOnly5) {
+                const wifi5 = createOnly5(ssid, password)
+                document.getElementById('result5').setAttribute('value', wifi5)
+                document.getElementById('btn-result2').setAttribute('disabled', 'disabled')
+
+            } else if (isOther5) {
+                const ssid5 = document.getElementById('ssid5').value
+                const pw5 = document.getElementById('password5').value
+                const wifi2 = createWifi2(ssid, password)
+                const wifi5 = createOnly5(ssid5, pw5)
+                document.getElementById('result2').setAttribute('value', wifi2)
+                document.getElementById('result5').setAttribute('value', wifi5)
+            } else {
+                const wifi2 = createWifi2(ssid, password)
+                const wifi5 = createWifi5(ssid, password)
+                document.getElementById('result2').setAttribute('value', wifi2)
+                document.getElementById('result5').setAttribute('value', wifi5)
+            }
+        }
+        function reset2G(){
+            const btn2 = document.getElementById('btn-result2')
+            btn2.innerHTML = 'Copiar 2.4GHz'
+            if (btn2.hasAttribute('disabled')) {
+                btn2.removeAttribute('disabled')
+            }
+        }
+        function reset5G() { document.getElementById('btn-result5').innerHTML = 'Copiar 5.0GHz' }
+        function limparDados() {
+            let ssid2G = document.getElementById('ssid')
+            let password2G = document.getElementById('password')
+            ssid2G.value = ''
+            password2G.value = ''
+
+            let ssid5G = document.getElementById('ssid5') || undefined
+            let password5G = document.getElementById('password5') || undefined
+            if(ssid5G != undefined) {
+                ssid5G.value = ''
+                password5G.value = ''
+            }
+        }
+        function limparResultado() {
+            document.getElementById('result2').setAttribute('value', '')
+            document.getElementById('result5').setAttribute('value', '')
+        }
+        function cleanBtnCopy(rede) {
+            if (rede == 'result2') {
+                document.getElementById('btn-result2').innerHTML = "Copiado!"
+                reset5G()
+                setTimeout(reset2G, 500)
+            } else {
+                document.getElementById('btn-result5').innerHTML = "Copiado!"
+                reset2G()
+                setTimeout(reset5G, 500)
+            }
+        }
+        function copy(rede) {
+            limparDados()
+            const txt = document.getElementById(rede)
+            txt.select()
+            document.execCommand("copy")
+            cleanBtnCopy(rede)
+        }
+    </script>
+</body>
+
+</html>
