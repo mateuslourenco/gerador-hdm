@@ -151,8 +151,11 @@
             const parent = document.getElementById('gerador')
 
             if (checkBox.checked == true) {
-                createInputSSID5G(parent)
-                createInputPassword5G(parent)
+                const check5G = document.getElementById('ssid5') || undefined
+                if (!check5G) {
+                    createInputSSID5G(parent)
+                    createInputPassword5G(parent)
+                }
             } else {
                 removeInput5G(parent)
             }
