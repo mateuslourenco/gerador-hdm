@@ -147,6 +147,7 @@
         }
         function checkIsOther5G() {
             limparResultado()
+            addDisabled()
             const checkBox = document.getElementById('other5')
             const parent = document.getElementById('gerador')
 
@@ -214,6 +215,12 @@
             
 
         }
+        function addDisabled() {
+            const btn2 = document.getElementById("btn-result2")
+            const btn5 = document.getElementById("btn-result5")
+            btn2.setAttribute("disabled", "disabled")
+            btn5.setAttribute("disabled", "disabled")
+        }
         function removeDisabled(btn) {
             if(btn.hasAttribute('disabled')) {
                     btn.removeAttribute('disabled')
@@ -253,7 +260,7 @@
                 setTimeout(reset2G, 500)
             } else {
                 document.getElementById('btn-result5').innerHTML = "Copiado!"
-                reset2G()
+                // reset2G()
                 setTimeout(reset5G, 500)
             }
         }
