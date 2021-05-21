@@ -81,26 +81,24 @@
 <body>
     <main>
         <h1>Gerador HDM</h1>
-        <div id="exclusive">
-            <div class="types">
+        <div id="networks">
+            <h3>Redes:</h3>
+            <div id="ntw-2g">
+                <p>2.4GHz <input type="checkbox" name="2g" id="2g" checked></p>
+            </div>
+            <div id="ntw-5g">
                 <label>
-                    Default
-                    <input type="radio" name="type" id="default" checked onclick="checkIsOther5G()">
+                    <p>5.0GHz <input type="checkbox" name="check5g" id="5g" onchange="onlyOneCheck5G(this); checkIsOther5G();" checked></p>
+                </label>
+                <label>
+                    <p>5.0GHz diferente <input type="checkbox" name="check5g" id="other5" onchange="onlyOneCheck5G(this); checkIsOther5G(); "></p>
                 </label>
             </div>
-            <div class="types">
-                <label>
-                    Somente 5.0GHz
-                    <input type="radio" name="type" id="only5" onclick="checkIsOther5G()">
-                </label>
-            </div>
-            <div class="types">
-                <label>
-                    5.0GHz diferente
-                    <input type="radio" name="type" id="other5" onclick="checkIsOther5G()">
-                </label>
-            </div>
-
+        </div>
+        <div id="opts">
+            <h3>Opções:</h3>
+            <p>SSID <input type="checkbox" name="opt-ssid" id="opt-ssid" checked></p>
+            <p>Password <input type="checkbox" name="opt-password" id="opt-password" checked></p>
         </div>
         <div id="gerador">
             <input type="text" id="ssid" placeholder="SSID">
@@ -108,14 +106,8 @@
             <button onclick="createJSON()" id="create">Gerar</button>
         </div>
         <div id="resultado">
-            <div id="doisQuPontoatro">
-                <input type="text" id="result2" readonly="readonly">
-                <button onclick="copy('result2')" id="btn-result2" disabled="disabled">Copiar 2.4GHz</button>
-            </div>
-            <div id="cincoPontoZero">
-                <input type="text" id="result5" readonly="readonly">
-                <button onclick="copy('result5')" id="btn-result5" disabled="disabled">Copiar 5.0GHz</button>
-            </div>
+                <input type="text" id="result" readonly="readonly">
+                <button onclick="copy('result')" id="btn-result2" disabled="disabled">Copiar</button>
         </div>
     </main>
     <script>
@@ -150,7 +142,6 @@
             addDisabled()
             const checkBox = document.getElementById('other5')
             const parent = document.getElementById('gerador')
-
             if (checkBox.checked == true) {
                 const check5G = document.getElementById('ssid5') || undefined
                 if (!check5G) {
@@ -161,6 +152,12 @@
                 removeInput5G(parent)
             }
         }
+        function onlyOneCheck5G(checkbox) {
+            let checkboxes = document.getElementsByName('check5g')
+            checkboxes.forEach((item) => {
+            if (item !== checkbox) item.checked = false
+        })
+}
         function checkChar(ssid, password) {
             if (ssid == "" || password == "") {
                 alert("Digite o SSID e Senha!!")
@@ -174,67 +171,61 @@
         }
         function createJSON() {
 
-            const isOnly5 = document.getElementById("only5").checked
+            const is2G = document.getElementById("2g").checked
+            const is5G = document.getElementById("5g").checked
             const isOther5 = document.getElementById('other5').checked
 
-            reset5G()
             reset2G()
             limparResultado()
 
-            const ssid = document.getElementById('ssid').value
-            const password = document.getElementById('password').value
+            const ssid = document.getElementById('ssid').value || undefined
+            const password = document.getElementById('password').value || undefined
 
-            if(checkChar(ssid,password)) {
+            if (checkChar(ssid, password)) {
 
                 const createWifi2 = (ssid1, password1) => JSON.stringify({ index: "1", ssid: ssid1, password: password1 })
                 const createWifi5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`, password: password1 })
                 const createOnly5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: ssid1, password: password1 })
-                
-                if (isOnly5) {
-                    const wifi5 = createOnly5(ssid, password)
-                    document.getElementById('result5').setAttribute('value', wifi5)
-                    document.getElementById('btn-result2').setAttribute('disabled', 'disabled')
-    
+
+                if (is2G && is5G) {
+                    const wifi2 = createWifi2(ssid, password)
+                    const wifi5 = createWifi5(ssid, password)
+                    const result = `[${wifi2},${wifi5}]`
+                    document.getElementById('result').setAttribute('value', result)
+                    
                 } else if (isOther5) {
                     const ssid5 = document.getElementById('ssid5').value
                     const pw5 = document.getElementById('password5').value
                     
-                    if(checkChar(ssid5, pw5)){
+                    if (checkChar(ssid5, pw5)) {
                         const wifi2 = createWifi2(ssid, password)
                         const wifi5 = createOnly5(ssid5, pw5)
-                        document.getElementById('result2').setAttribute('value', wifi2)
-                        document.getElementById('result5').setAttribute('value', wifi5)
+                        const result = `[${wifi2},${wifi5}]`
+                        document.getElementById('result').setAttribute('value', result)
+    
                     }
+                } else if(is5G){
+                    const wifi5 = createOnly5(ssid, password)
+                    document.getElementById('result').setAttribute('value', wifi5)
                 } else {
                     const wifi2 = createWifi2(ssid, password)
-                    const wifi5 = createWifi5(ssid, password)
-                    document.getElementById('result2').setAttribute('value', wifi2)
-                    document.getElementById('result5').setAttribute('value', wifi5)
+                    document.getElementById('result').setAttribute('value', wifi2)
                 }
             }
-            
-
         }
         function addDisabled() {
             const btn2 = document.getElementById("btn-result2")
-            const btn5 = document.getElementById("btn-result5")
             btn2.setAttribute("disabled", "disabled")
-            btn5.setAttribute("disabled", "disabled")
         }
         function removeDisabled(btn) {
-            if(btn.hasAttribute('disabled')) {
-                    btn.removeAttribute('disabled')
-                }
+            if (btn.hasAttribute('disabled')) {
+                btn.removeAttribute('disabled')
+            }
         }
-        function reset2G(){
+        function reset2G() {
             const btn2 = document.getElementById('btn-result2')
-            btn2.innerHTML = 'Copiar 2.4GHz'
+            btn2.innerHTML = 'Copiar'
             removeDisabled(btn2)
-        }
-        function reset5G(){
-            const btn5 = document.getElementById('btn-result5')
-            btn5.innerHTML = 'Copiar 5.0GHz'
-            removeDisabled(btn5)
         }
         function limparDados() {
             let ssid2G = document.getElementById('ssid')
@@ -244,27 +235,21 @@
 
             let ssid5G = document.getElementById('ssid5') || undefined
             let password5G = document.getElementById('password5') || undefined
-            if(ssid5G != undefined) {
+            if (ssid5G != undefined) {
                 ssid5G.value = ''
                 password5G.value = ''
             }
         }
         function limparResultado() {
-            document.getElementById('result2').setAttribute('value', '')
-            document.getElementById('result5').setAttribute('value', '')
+            document.getElementById('result').setAttribute('value', '')
         }
         function cleanBtnCopy(rede) {
-            if (rede == 'result2') {
-                document.getElementById('btn-result2').innerHTML = "Copiado!"
-                reset5G()
-                setTimeout(reset2G, 500)
-            } else {
-                document.getElementById('btn-result5').innerHTML = "Copiado!"
-                setTimeout(reset5G, 500)
-            }
+            document.getElementById('btn-result2').innerHTML = "Copiado!"
+            setTimeout(reset2G, 500)
+            
         }
         function copy(rede) {
-            
+
             const txt = document.getElementById(rede)
             txt.select()
             document.execCommand("copy")
