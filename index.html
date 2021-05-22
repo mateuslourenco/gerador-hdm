@@ -124,6 +124,10 @@
                 id: 'ssid5',
                 placeholder: 'SSID 5.0GHz'
             })
+            let isSSID = document.getElementById('opt-ssid').checked
+            if(!isSSID) {
+                ssid5.setAttribute('disabled', 'disabled')
+            }
             parent.appendChild(ssid5)
         }
         function createInputPassword5G(parent) {
@@ -133,6 +137,10 @@
                 id: 'password5',
                 placeholder: 'Password 5.0GHz'
             })
+            let isPW = document.getElementById('opt-pw').checked
+            if(!isPW) {
+                pw5.setAttribute('disabled', 'disabled')
+            }
             parent.appendChild(pw5)
         }
         function removeInput5G(parent) {
@@ -154,6 +162,7 @@
                 if (!check5G) {
                     createInputSSID5G(parent)
                     createInputPassword5G(parent)
+
                 }
             } else {
                 removeInput5G(parent)
@@ -161,23 +170,43 @@
         }
         function checkOPT() {
             let isSSSID = document.getElementById('opt-ssid').checked
-            let  isPW = document.getElementById('opt-pw').checked
+            let isPW = document.getElementById('opt-pw').checked
             let inputSSID = document.getElementById('ssid')
+            let inputSSID5 = document.getElementById('ssid5') || undefined
             let inputPW = document.getElementById('password')
+            let inputPW5 = document.getElementById('password5') || undefined
             if(!isSSSID) {
                 inputSSID.value = ""
                 inputSSID.setAttribute('disabled', 'disabled')
+                if(inputSSID5 != undefined) {
+                    inputSSID5.value = ""
+                    inputSSID5.setAttribute('disabled', 'disabled')
+                }
             } else {
                 if(inputSSID.hasAttribute('disabled')) {
                     inputSSID.removeAttribute('disabled')
+                }
+                if(inputSSID5) {
+                    if(inputSSID5.hasAttribute('disabled')) {
+                    inputSSID5.removeAttribute('disabled')
+                    }
                 }
             }
             if(!isPW) {
                 inputPW.value = ""
                 inputPW.setAttribute('disabled', 'disabled')
+                if(inputPW5 != undefined) {
+                    inputPW5.value = ""
+                    inputPW5.setAttribute('disabled', 'disabled')
+                }
             } else {
                 if(inputPW.hasAttribute('disabled')) {
                     inputPW.removeAttribute('disabled')
+                }
+                if(inputSSID5) {
+                    if(inputPW5.hasAttribute('disabled')) {
+                        inputPW5.removeAttribute('disabled')
+                    }
                 }
             }
         }
@@ -229,7 +258,8 @@
                 const createWifi5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`, password: password1 })
                 const createOnly5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: ssid1, password: password1 })
                 const createSSID2 = (ssid1) => JSON.stringify({ index: "1", ssid: ssid1})
-                const createSSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: ssid1})
+                const createSSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`})
+                const createOnlySSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: ssid1})
                 const createPW2 = (password1) => JSON.stringify({ index: "1", password: password1 })
                 const createPW5 = (password1) => JSON.stringify({ index: "5", password: password1 })
                 
@@ -249,7 +279,7 @@
                     if (isSSID && isPW) {
                         result = createWifi5(ssid, password)
                     } else if (isSSID) {
-                        result = createSSID5(ssid)
+                        result = createOnlySSID5(ssid)
                     } else {
                         result = createPW5(password)
                     }
