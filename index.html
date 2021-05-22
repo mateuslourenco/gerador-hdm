@@ -24,7 +24,7 @@
             background-color: #fff;
             display: flex;
             flex-direction: column;
-            height: 400px;
+            height: auto;
             width: 100%;
             margin-top: 100px;
             padding: 10px;
@@ -82,25 +82,19 @@
     <main>
         <h1>Gerador HDM</h1>
         <div id="exclusive">
-            <div class="types">
-                <label>
-                    Default
-                    <input type="radio" name="type" id="default" checked onclick="checkIsOther5G()">
-                </label>
-            </div>
-            <div class="types">
-                <label>
-                    Somente 5.0GHz
-                    <input type="radio" name="type" id="only5" onclick="checkIsOther5G()">
-                </label>
-            </div>
-            <div class="types">
-                <label>
-                    5.0GHz diferente
-                    <input type="radio" name="type" id="other5" onclick="checkIsOther5G()">
-                </label>
-            </div>
-
+            <h3>Redes: </h3>
+            <p><label>Default <input type="radio" name="type" id="default" checked onclick="checkIsOther5G()"></label>
+            </p>
+            <p><label>Somente 2.4GHz <input type="radio" name="type" id="only2" onclick="checkIsOther5G()"></label>
+            </p>
+            <p><label>Somente 5.0GHz <input type="radio" name="type" id="only5" onclick="checkIsOther5G()"></label>
+            </p>
+            <p><label>5.0GHz diferente <input type="radio" name="type" id="other5" onclick="checkIsOther5G()"></label>            
+        <div id="opt">
+            <h3>Opcoes: </h3>
+            <label><p>SSID <input type="checkbox" name="opt-ssid" id="opt-ssid"></p></label>
+            <label><p>Password <input type="checkbox" name="opt-pw" id="opt-pw"></p></label>
+        </div>
         </div>
         <div id="gerador">
             <input type="text" id="ssid" placeholder="SSID">
@@ -174,6 +168,7 @@
         }
         function createJSON() {
 
+            const isOnly2 = document.getElementById('only2').checked
             const isOnly5 = document.getElementById("only5").checked
             const isOther5 = document.getElementById('other5').checked
 
@@ -190,7 +185,10 @@
                 const createWifi5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`, password: password1 })
                 const createOnly5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: ssid1, password: password1 })
                 
-                if (isOnly5) {
+                if (isOnly2) {
+                    const wifi2 = createWifi2(ssid, password)
+                    document.getElementById('result2').setAttribute('value', wifi2)
+                } else if (isOnly5) {
                     const wifi5 = createOnly5(ssid, password)
                     document.getElementById('result5').setAttribute('value', wifi5)
                     document.getElementById('btn-result2').setAttribute('disabled', 'disabled')
