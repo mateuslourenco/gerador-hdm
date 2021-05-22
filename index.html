@@ -188,10 +188,12 @@
                 if (isOnly2) {
                     const wifi2 = createWifi2(ssid, password)
                     document.getElementById('result2').setAttribute('value', wifi2)
+                    document.getElementById('btn-result5').setAttribute('disabled', 'disabled')
                 } else if (isOnly5) {
                     const wifi5 = createOnly5(ssid, password)
                     document.getElementById('result5').setAttribute('value', wifi5)
                     document.getElementById('btn-result2').setAttribute('disabled', 'disabled')
+                    
     
                 } else if (isOther5) {
                     const ssid5 = document.getElementById('ssid5').value
