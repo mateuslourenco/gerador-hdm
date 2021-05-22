@@ -75,6 +75,10 @@
         button:disabled {
             cursor: not-allowed;
         }
+        input[type=text]:disabled{
+            cursor: not-allowed;
+            background-color: rgb(228, 226, 226);
+        }
     </style>
 </head>
 
@@ -92,8 +96,8 @@
             <p><label>5.0GHz diferente <input type="radio" name="type" id="other5" onclick="checkIsOther5G()"></label>            
         <div id="opt">
             <h3>Opcoes: </h3>
-            <label><p>SSID <input type="checkbox" name="opt-ssid" id="opt-ssid"></p></label>
-            <label><p>Password <input type="checkbox" name="opt-pw" id="opt-pw"></p></label>
+            <label><p>SSID <input type="checkbox" name="opt-ssid" id="opt-ssid" checked onclick="checkOPT()"></p></label>
+            <label><p>Password <input type="checkbox" name="opt-pw" id="opt-pw" checked onclick="checkOPT()"></p></label>
         </div>
         </div>
         <div id="gerador">
@@ -155,12 +159,39 @@
                 removeInput5G(parent)
             }
         }
-        function checkChar(ssid, password) {
-            if (ssid == "" || password == "") {
-                alert("Digite o SSID e Senha!!")
+        function checkOPT() {
+            let isSSSID = document.getElementById('opt-ssid').checked
+            let  isPW = document.getElementById('opt-pw').checked
+            let inputSSID = document.getElementById('ssid')
+            let inputPW = document.getElementById('password')
+            if(!isSSSID) {
+                inputSSID.value = ""
+                inputSSID.setAttribute('disabled', 'disabled')
+            } else {
+                if(inputSSID.hasAttribute('disabled')) {
+                    inputSSID.removeAttribute('disabled')
+                }
+            }
+            if(!isPW) {
+                inputPW.value = ""
+                inputPW.setAttribute('disabled', 'disabled')
+            } else {
+                if(inputPW.hasAttribute('disabled')) {
+                    inputPW.removeAttribute('disabled')
+                }
+            }
+        }
+        function checkSSID(ssid) {
+            if (ssid == "") {
+                alert("Digite o SSID!!")
                 return false
-            } else if (password.length < 8) {
-                alert("Senha precisa ter mais que oito digitos!")
+            } else {
+                return true
+            }
+        }
+        function checkPW(password) {
+            if (password == "" || password.length < 8) {
+                alert("Digite uma senha com mais de oito caracteres!!")
                 return false
             } else {
                 return true
@@ -168,52 +199,109 @@
         }
         function createJSON() {
 
-            const isOnly2 = document.getElementById('only2').checked
-            const isOnly5 = document.getElementById("only5").checked
-            const isOther5 = document.getElementById('other5').checked
+            let isOnly2 = document.getElementById('only2').checked
+            let isOnly5 = document.getElementById("only5").checked
+            let isOther5 = document.getElementById('other5').checked
+            let isSSID = document.getElementById('opt-ssid').checked
+            let isPW = document.getElementById('opt-pw').checked
+            let ssid = document.getElementById('ssid').value
+            let password = document.getElementById('password').value
+            
+            let chkSSID = undefined
+            let chkPW = undefined
 
             reset5G()
             reset2G()
             limparResultado()
 
-            const ssid = document.getElementById('ssid').value
-            const password = document.getElementById('password').value
+            if(isSSID && isPW) {
+                chkSSID = checkSSID(ssid)
+                chkPW = checkPW(password)
+            } else if(isSSID) {
+                chkSSID = checkSSID(ssid)
+            } else {
+                chkPW = checkPW(password)
+            }
 
-            if(checkChar(ssid,password)) {
+            if(chkSSID != false && chkPW != false) {
 
                 const createWifi2 = (ssid1, password1) => JSON.stringify({ index: "1", ssid: ssid1, password: password1 })
                 const createWifi5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`, password: password1 })
                 const createOnly5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: ssid1, password: password1 })
+                const createSSID2 = (ssid1) => JSON.stringify({ index: "1", ssid: ssid1})
+                const createSSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: ssid1})
+                const createPW2 = (password1) => JSON.stringify({ index: "1", password: password1 })
+                const createPW5 = (password1) => JSON.stringify({ index: "5", password: password1 })
                 
                 if (isOnly2) {
-                    const wifi2 = createWifi2(ssid, password)
-                    document.getElementById('result2').setAttribute('value', wifi2)
+                    let result
+                    if (isSSID && isPW) {
+                        result = createWifi2(ssid, password)
+                    } else if (isSSID) {
+                        result = createSSID2(ssid)
+                    } else {
+                        result = createPW2(password)
+                    }
+                    document.getElementById('result2').setAttribute('value', result)
                     document.getElementById('btn-result5').setAttribute('disabled', 'disabled')
                 } else if (isOnly5) {
-                    const wifi5 = createOnly5(ssid, password)
-                    document.getElementById('result5').setAttribute('value', wifi5)
-                    document.getElementById('btn-result2').setAttribute('disabled', 'disabled')
-                    
-    
-                } else if (isOther5) {
-                    const ssid5 = document.getElementById('ssid5').value
-                    const pw5 = document.getElementById('password5').value
-                    
-                    if(checkChar(ssid5, pw5)){
-                        const wifi2 = createWifi2(ssid, password)
-                        const wifi5 = createOnly5(ssid5, pw5)
-                        document.getElementById('result2').setAttribute('value', wifi2)
-                        document.getElementById('result5').setAttribute('value', wifi5)
+                    let result
+                    if (isSSID && isPW) {
+                        result = createWifi5(ssid, password)
+                    } else if (isSSID) {
+                        result = createSSID5(ssid)
+                    } else {
+                        result = createPW5(password)
                     }
-                } else {
-                    const wifi2 = createWifi2(ssid, password)
-                    const wifi5 = createWifi5(ssid, password)
-                    document.getElementById('result2').setAttribute('value', wifi2)
-                    document.getElementById('result5').setAttribute('value', wifi5)
-                }
-            }
-            
+                    document.getElementById('result5').setAttribute('value', result)
+                    document.getElementById('btn-result2').setAttribute('disabled', 'disabled')
+                } else if (isOther5) {
+                    let result2
+                    let result5
+                    let ssid5 = document.getElementById('ssid5').value
+                    let pw5 = document.getElementById('password5').value
+                    
+                    if(isSSID && isPW) {
+                        chkSSID = checkSSID(ssid5)
+                        chkPW = checkPW(pw5)
+                    } else if(isSSID) {
+                        chkSSID = checkSSID(ssid5)
+                    } else {
+                        chkPW = checkPW(pw5)
+                    }       
 
+                    if(chkSSID != false && chkPW != false){
+                        
+                        if (isSSID && isPW) {
+                            result2 = createWifi2(ssid, password)
+                            result5 = createOnly5(ssid5, pw5)
+                        } else if (isSSID) {
+                            result2 = createSSID2(ssid)
+                            result5 = createOnly5(ssid5)
+                        } else {
+                            result2 = createPW2(password)
+                            result5 = createPW5(pw5)
+                        }   
+                    } 
+                    document.getElementById('result2').setAttribute('value', result2)
+                    document.getElementById('result5').setAttribute('value', result5)
+                } else {
+                        let result2
+                        let result5
+                        if (isSSID && isPW) {
+                            result2 = createWifi2(ssid, password)
+                            result5 = createWifi5(ssid, password)
+                        } else if (isSSID) {
+                            result2 = createSSID2(ssid)
+                            result5 = createSSID5(ssid)
+                        } else {
+                            result2 = createPW2(password)
+                            result5 = createPW5(password)
+                        }
+                        document.getElementById('result2').setAttribute('value', result2)
+                        document.getElementById('result5').setAttribute('value', result5)
+                    }
+            }
         }
         function addDisabled() {
             const btn2 = document.getElementById("btn-result2")
