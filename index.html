@@ -96,9 +96,9 @@
             <p><label>5.0GHz diferente <input type="radio" name="type" id="other5" onclick="checkIsOther5G();checkIsOnly5G()"></label>            
         <div id="opt">
             <h3>Opcoes: </h3>
-            <label><p>SSID <input type="checkbox" name="opt-ssid" id="opt-ssid" checked onclick="checkOPT()"></p></label>
-            <label><p>Password <input type="checkbox" name="opt-pw" id="opt-pw" checked onclick="checkOPT()"></p></label>
-            <label><p>Canal 2.4GHz <input type="checkbox" name="opt-canal" id="opt-canal" onclick="checkOPT()"></p></label>
+            <p><label>SSID <input type="checkbox" name="opt-ssid" id="opt-ssid" checked onclick="checkOPT()"></label></p>
+            <p><label>Password <input type="checkbox" name="opt-pw" id="opt-pw" checked onclick="checkOPT()"></label></p>
+            <p><label>Canal 2.4GHz <input type="checkbox" name="opt-canal" id="opt-canal" onclick="checkOPT()"></label></p>
         </div>
         </div>
         <div id="gerador">
@@ -335,7 +335,7 @@
                 } else if (isOnly5) {
                     let result
                     if (isSSID && isPW) {
-                        result = createWifi5(ssid, password)
+                        result = createOnly5(ssid, password)
                     } else if (isSSID) {
                         result = createOnlySSID5(ssid)
                     } else {
