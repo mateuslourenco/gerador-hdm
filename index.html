@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador HDM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <style>
         * {
             margin: 0;
@@ -93,13 +94,26 @@
             </p>
             <p><label>Somente 5.0GHz <input type="radio" name="type" id="only5" onclick="checkIsOther5G();checkIsOnly5G()"></label>
             </p>
-            <p><label>5.0GHz diferente <input type="radio" name="type" id="other5" onclick="checkIsOther5G();checkIsOnly5G()"></label>            
-        <div id="opt">
-            <h3>Opcoes: </h3>
-            <p><label>SSID <input type="checkbox" name="opt-ssid" id="opt-ssid" checked onclick="checkOPT()"></label></p>
-            <p><label>Password <input type="checkbox" name="opt-pw" id="opt-pw" checked onclick="checkOPT()"></label></p>
-            <p><label>Canal 2.4GHz <input type="checkbox" name="opt-canal" id="opt-canal" onclick="checkOPT()"></label></p>
+            <p><label>5.0GHz diferente <input type="radio" name="type" id="other5" onclick="checkIsOther5G();checkIsOnly5G()"></label>    
         </div>
+        <h3>Opcoes: </h3>
+        <div class="form-check">
+            <input class="form-check-input opt-ssid" type="checkbox" id="defaultCheck1" name="opt-ssid" checked onclick="checkOPT()">
+            <label class="form-check-label" for="defaultCheck1">
+              SSID
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input opt-pw" type="checkbox" id="defaultCheck2" checked onclick="checkOPT()">
+            <label class="form-check-label" for="defaultCheck2">
+              Password
+            </label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input opt-canal" type="checkbox" id="defaultCheck3" onclick="checkOPT()">
+            <label class="form-check-label" for="defaultCheck3">
+              Canal 2.4GHz
+            </label>
         </div>
         <div id="gerador">
             <input type="text" id="ssid" placeholder="SSID">
@@ -126,7 +140,7 @@
                 id: 'ssid5',
                 placeholder: 'SSID 5.0GHz'
             })
-            let isSSID = document.getElementById('opt-ssid').checked
+            let isSSID = document.querySelector('.opt-ssid').checked
             if(!isSSID) {
                 ssid5.setAttribute('disabled', 'disabled')
             }
@@ -139,7 +153,7 @@
                 id: 'password5',
                 placeholder: 'Password 5.0GHz'
             })
-            let isPW = document.getElementById('opt-pw').checked
+            let isPW = document.querySelector('.opt-pw').checked
             if(!isPW) {
                 pw5.setAttribute('disabled', 'disabled')
             }
@@ -172,7 +186,7 @@
         }
         function checkIsOnly5G(){
             let checkBoxOnly5G = document.getElementById("only5"),
-                checkBoxCH = document.getElementById("opt-canal"),
+                checkBoxCH = document.querySelector(".opt-canal"),
                 ch = document.getElementById('canal')
             if (checkBoxOnly5G.checked == true) {
                 checkBoxCH.setAttribute('disabled', 'disabled')
@@ -184,14 +198,14 @@
             }
         }
         function checkOPT() {
-            let isSSSID = document.getElementById('opt-ssid').checked,
-                isPW = document.getElementById('opt-pw').checked,
-                isChannel = document.getElementById('opt-canal').checked,
-                inputSSID = document.getElementById('ssid'),
-                inputSSID5 = document.getElementById('ssid5') || undefined,
-                inputPW = document.getElementById('password'),
-                inputPW5 = document.getElementById('password5') || undefined
-                inputCH = document.getElementById('canal') || undefined
+            let isSSSID = document.querySelector('.opt-ssid').checked,
+                isPW = document.querySelector('.opt-pw').checked,
+                isChannel = document.querySelector('.opt-canal').checked,
+                inputSSID = document.querySelector('#ssid'),
+                inputSSID5 = document.querySelector('#ssid5') || undefined,
+                inputPW = document.querySelector('#password'),
+                inputPW5 = document.querySelector('#password5') || undefined
+                inputCH = document.querySelector('#canal') || undefined
             if(!isSSSID) {
                 inputSSID.value = ""
                 inputSSID.setAttribute('disabled', 'disabled')
@@ -263,9 +277,9 @@
             let isOnly2 = document.getElementById('only2').checked,
                 isOnly5 = document.getElementById("only5").checked,
                 isOther5 = document.getElementById('other5').checked,
-                isSSID = document.getElementById('opt-ssid').checked,
-                isCH = document.getElementById('opt-canal').checked,
-                isPW = document.getElementById('opt-pw').checked,
+                isSSID = document.querySelector('.opt-ssid').checked,
+                isCH = document.querySelector('.opt-canal').checked,
+                isPW = document.querySelector('.opt-pw').checked,
                 ssid = document.getElementById('ssid').value,
                 password = document.getElementById('password').value
                 ch = document.getElementById('canal').value
