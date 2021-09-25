@@ -9,36 +9,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
             margin-bottom: 5px;
         }
-
         body {
             max-width: 700px;
             margin: auto;
-            background-color: lightskyblue;
         }
-
         main {
-            background-color: #fff;
-            display: flex;
-            flex-direction: column;
-            height: auto;
-            width: 100%;
             margin-top: 100px;
             padding: 10px;
-            border-radius: 30px;
-            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.473);
         }
-
-        .types {
-            width: 30%;
-            display: flex;
-            justify-content: space-between;
-        }
-
         input[type=text], input[type=number] {
             width: calc(100% / 3 - 47px);
             height: 30px;
@@ -46,7 +26,6 @@
             border: 1px solid black;
             text-align: center;
         }
-
         #gerador {
             display: flex;
             flex-wrap: wrap;
@@ -55,360 +34,364 @@
         #gerador input {
             margin-right: 5px;
         }
-
         #resultado input {
             width: calc(100% - 130px);
         }
-
-        button {
-            cursor: pointer;
+        .btn {
             width: 120px;
             height: 30px;
             border-radius: 20px;
-            border: none;
-            background-color: paleturquoise;
+            padding: 0;
         }
-
-        button:hover:enabled {
-            background-color: #2196F3;
-        }
-
-        button:disabled {
+        .btn:disabled {
             cursor: not-allowed;
+            pointer-events: all !important;
         }
         input[type=text]:disabled, input[type=number]:disabled{
             cursor: not-allowed;
-            background-color: rgb(228, 226, 226);
+            background-color: rgb(231, 230, 230);
         }
     </style>
 </head>
 
 <body>
-    <main>
-        <h1>Gerador HDM</h1>
-        <div id="exclusive">
-            <h3>Redes: </h3>
-            <p><label>Default <input type="radio" name="type" id="default" checked onclick="checkIsOther5G();checkIsOnly5G()"></label>
-            </p>
-            <p><label>Somente 2.4GHz <input type="radio" name="type" id="only2" onclick="checkIsOther5G();checkIsOnly5G()"></label>
-            </p>
-            <p><label>Somente 5.0GHz <input type="radio" name="type" id="only5" onclick="checkIsOther5G();checkIsOnly5G()"></label>
-            </p>
-            <p><label>5.0GHz diferente <input type="radio" name="type" id="other5" onclick="checkIsOther5G();checkIsOnly5G()"></label>    
-        </div>
-        <h3>Opcoes: </h3>
-        <div class="form-check">
-            <input class="form-check-input opt-ssid" type="checkbox" id="defaultCheck1" name="opt-ssid" checked onclick="checkOPT()">
-            <label class="form-check-label" for="defaultCheck1">
-              SSID
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input opt-pw" type="checkbox" id="defaultCheck2" checked onclick="checkOPT()">
-            <label class="form-check-label" for="defaultCheck2">
-              Password
-            </label>
-        </div>
-        <div class="form-check">
-            <input class="form-check-input opt-canal" type="checkbox" id="defaultCheck3" onclick="checkOPT()">
-            <label class="form-check-label" for="defaultCheck3">
-              Canal 2.4GHz
-            </label>
-        </div>
-        <div id="gerador">
-            <input type="text" id="ssid" placeholder="SSID">
-            <input type="text" id="password" placeholder="Password">
-            <input type="number" id="canal" min="1" max="12" placeholder="Canal" disabled>
-            <button onclick="createJSON()" id="create">Gerar</button>
-        </div>
-        <div id="resultado">
-            <div id="doisQuPontoatro">
-                <input type="text" id="result2" readonly="readonly">
-                <button onclick="copy('result2')" id="btn-result2" disabled="disabled">Copiar 2.4GHz</button>
+    <main class="border border-primary rounded">
+        <h1 class="text-center">Gerador HDM</h1>
+        <fieldset class="border p-2 mb-1">
+            <legend>Redes</legend>
+            <div class="form-check">
+                <input class="form-check-input padrao" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked onclick="checkIsOther5G();checkIsOnly5G()">
+                <label class="form-check-label" for="flexRadioDefault1">
+                    Padrão <i>(Será inserido os caracteres -5G ao final do SSID da rede 5.0GHz)</i>
+                </label>
             </div>
-            <div id="cincoPontoZero">
-                <input type="text" id="result5" readonly="readonly">
-                <button onclick="copy('result5')" id="btn-result5" disabled="disabled">Copiar 5.0GHz</button>
+            <div class="form-check">
+                <input class="form-check-input only2" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onclick="checkIsOther5G();checkIsOnly5G()">
+                <label class="form-check-label" for="flexRadioDefault2">
+                    Somente rede 2.4GHz
+                </label>
             </div>
-        </div>
+            <div class="form-check">
+                <input class="form-check-input only5" type="radio" name="flexRadioDefault" id="flexRadioDefault3" onclick="checkIsOther5G();checkIsOnly5G()">
+                <label class="form-check-label" for="flexRadioDefault3">
+                    Somente rede 5.0GHz
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input other5" type="radio" name="flexRadioDefault" id="flexRadioDefault4" onclick="checkIsOther5G();checkIsOnly5G()">
+                <label class="form-check-label" for="flexRadioDefault4">
+                    Redes 2.4GHz e 5.0GHz com SSID"s e senhas diferentes
+                </label>
+            </div>
+        </fieldset>
+        <fieldset class="border p-2 mb-1">
+            <legend>Opções</legend>
+            <div class="form-check">
+                <input class="form-check-input opt-ssid" type="checkbox" id="defaultCheck1" name="opt-ssid" checked onclick="checkOPT()">
+                <label class="form-check-label" for="defaultCheck1">
+                    SSID
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input opt-pw" type="checkbox" id="defaultCheck2" checked onclick="checkOPT()">
+                <label class="form-check-label" for="defaultCheck2">
+                    Password
+                </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input opt-canal" type="checkbox" id="defaultCheck3" onclick="checkOPT()">
+                <label class="form-check-label" for="defaultCheck3">
+                    Canal 2.4GHz
+                </label>
+            </div>
+            <div id="gerador">
+                <input type="text" id="ssid" placeholder="SSID">
+                <input type="text" class="mb-1" id="password" placeholder="Password">
+                <input type="number" id="canal" min="1" max="12" placeholder="Canal" disabled>
+                <button type="button" class="btn btn-primary" onclick="createJSON()" id="create">Gerar</button>
+            </div>
+            <div id="resultado">
+                <div id="doisQuPontoatro">
+                    <input type="text" id="result2" readonly="readonly">
+                    <button type="button" class="btn btn-primary" onclick="copy("result2")" id="btn-result2" disabled="disabled">Copiar 2.4GHz</button>
+                </div>
+                <div id="cincoPontoZero">
+                    <input type="text" id="result5" readonly="readonly">
+                    <button type="button" class="btn btn-primary" onclick="copy("result5")" id="btn-result5" disabled="disabled">Copiar 5.0GHz</button>
+                </div>
+            </div>
+        </fieldset>
     </main>
+    <footer class="text-center"><a class="text-decoration-none text-primary" href="mailto:mateus.lourenco@telefonica.com">Desenvolvido por Mateus Lourenço</a></footer>
     <script>
         function createInputSSID5G(parent) {
-            const ssid5 = document.createElement('input')
+            const ssid5 = document.createElement("input");
             Object.assign(ssid5, {
-                type: 'text',
-                id: 'ssid5',
-                placeholder: 'SSID 5.0GHz'
-            })
-            let isSSID = document.querySelector('.opt-ssid').checked
+                id: "ssid5",
+                placeholder: "SSID 5.0GHz",
+                type: "text"
+            });
+            let isSSID = document.querySelector(".opt-ssid").checked;
             if(!isSSID) {
-                ssid5.setAttribute('disabled', 'disabled')
+                ssid5.setAttribute("disabled", "disabled");
             }
-            parent.appendChild(ssid5)
+            parent.appendChild(ssid5);
         }
         function createInputPassword5G(parent) {
-            const pw5 = document.createElement('input')
+            const pw5 = document.createElement("input");
             Object.assign(pw5, {
-                type: 'text',
-                id: 'password5',
-                placeholder: 'Password 5.0GHz'
-            })
-            let isPW = document.querySelector('.opt-pw').checked
+                id: "password5",
+                placeholder: "Password 5.0GHz",
+                type: "text"
+            });
+            let isPW = document.querySelector(".opt-pw").checked;
             if(!isPW) {
-                pw5.setAttribute('disabled', 'disabled')
+                pw5.setAttribute("disabled", "disabled");
             }
-            parent.appendChild(pw5)
+            parent.appendChild(pw5);
         }
         function removeInput5G(parent) {
-            const ssid5 = document.getElementById('ssid5') || undefined
-            const password5 = document.getElementById('password5') || undefined
-            if (ssid5 != undefined) {
-                parent.removeChild(ssid5)
-                parent.removeChild(password5)
+            const ssid5 = document.getElementById("ssid5") || undefined;
+            const password5 = document.getElementById("password5") || undefined;
+            if (ssid5 !== undefined) {
+                parent.removeChild(ssid5);
+                parent.removeChild(password5);
             }
         }
         function checkIsOther5G() {
-            limparResultado()
-            addDisabled()
-            const checkBox = document.getElementById('other5')
-            const parent = document.getElementById('gerador')
+            limparResultado();
+            addDisabled();
+            const checkBox = document.querySelector(".other5");
+            const parent = document.getElementById("gerador");
 
-            if (checkBox.checked == true) {
-                const check5G = document.getElementById('ssid5') || undefined
+            if (checkBox.checked === true) {
+                const check5G = document.getElementById("ssid5") || undefined;
                 if (!check5G) {
-                    createInputSSID5G(parent)
-                    createInputPassword5G(parent)
+                    createInputSSID5G(parent);
+                    createInputPassword5G(parent);
 
                 }
             } else {
-                removeInput5G(parent)
+                removeInput5G(parent);
             }
         }
         function checkIsOnly5G(){
-            let checkBoxOnly5G = document.getElementById("only5"),
-                checkBoxCH = document.querySelector(".opt-canal"),
-                ch = document.getElementById('canal')
-            if (checkBoxOnly5G.checked == true) {
-                checkBoxCH.setAttribute('disabled', 'disabled')
-                checkBoxCH.checked = false
-                ch.value = ""
-                ch.setAttribute('disabled', 'disabled')
+            let checkBoxOnly5G = document.querySelector(".only5");
+            let checkBoxCH = document.querySelector(".opt-canal");
+            let ch = document.getElementById("canal");
+            if (checkBoxOnly5G.checked === true) {
+                checkBoxCH.setAttribute("disabled", "disabled");
+                checkBoxCH.checked = false;
+                ch.value = "";
+                ch.setAttribute("disabled", "disabled");
             } else {
-                checkBoxCH.removeAttribute('disabled')
+                checkBoxCH.removeAttribute("disabled");
             }
         }
         function checkOPT() {
-            let isSSSID = document.querySelector('.opt-ssid').checked,
-                isPW = document.querySelector('.opt-pw').checked,
-                isChannel = document.querySelector('.opt-canal').checked,
-                inputSSID = document.querySelector('#ssid'),
-                inputSSID5 = document.querySelector('#ssid5') || undefined,
-                inputPW = document.querySelector('#password'),
-                inputPW5 = document.querySelector('#password5') || undefined
-                inputCH = document.querySelector('#canal') || undefined
+            let isSSSID = document.querySelector(".opt-ssid").checked;
+            let isPW = document.querySelector(".opt-pw").checked;
+            let isChannel = document.querySelector(".opt-canal").checked;
+            let inputSSID = document.querySelector("#ssid");
+            let inputSSID5 = document.querySelector("#ssid5") || undefined;
+            let inputPW = document.querySelector("#password");
+            let inputPW5 = document.querySelector("#password5") || undefined;
+            let inputCH = document.querySelector("#canal") || undefined;
             if(!isSSSID) {
-                inputSSID.value = ""
-                inputSSID.setAttribute('disabled', 'disabled')
-                if(inputSSID5 != undefined) {
-                    inputSSID5.value = ""
-                    inputSSID5.setAttribute('disabled', 'disabled')
+                inputSSID.value = "";
+                inputSSID.setAttribute("disabled", "disabled");
+                if(inputSSID5 !== undefined) {
+                    inputSSID5.value = "";
+                    inputSSID5.setAttribute("disabled", "disabled");
                 }
             } else {
-                if(inputSSID.hasAttribute('disabled')) {
-                    inputSSID.removeAttribute('disabled')
+                if(inputSSID.hasAttribute("disabled")) {
+                    inputSSID.removeAttribute("disabled");
                 }
                 if(inputSSID5) {
-                    if(inputSSID5.hasAttribute('disabled')) {
-                    inputSSID5.removeAttribute('disabled')
+                    if(inputSSID5.hasAttribute("disabled")) {
+                    inputSSID5.removeAttribute("disabled");
                     }
                 }
             }
             if(!isPW) {
-                inputPW.value = ""
-                inputPW.setAttribute('disabled', 'disabled')
-                if(inputPW5 != undefined) {
-                    inputPW5.value = ""
-                    inputPW5.setAttribute('disabled', 'disabled')
+                inputPW.value = "";
+                inputPW.setAttribute("disabled", "disabled");
+                if(inputPW5 !== undefined) {
+                    inputPW5.value = "";
+                    inputPW5.setAttribute("disabled", "disabled");
                 }
             } else {
-                if(inputPW.hasAttribute('disabled')) {
-                    inputPW.removeAttribute('disabled')
+                if(inputPW.hasAttribute("disabled")) {
+                    inputPW.removeAttribute("disabled");
                 }
                 if(inputSSID5) {
-                    if(inputPW5.hasAttribute('disabled')) {
-                        inputPW5.removeAttribute('disabled')
+                    if(inputPW5.hasAttribute("disabled")) {
+                        inputPW5.removeAttribute("disabled");
                     }
                 }
             }
             if(!isChannel) {
-                inputCH.value = ""
-                inputCH.setAttribute('disabled', 'disabled')
+                inputCH.value = "";
+                inputCH.setAttribute("disabled", "disabled");
             } else {
-                if(inputCH.hasAttribute('disabled')) {
-                    inputCH.removeAttribute('disabled')
+                if(inputCH.hasAttribute("disabled")) {
+                    inputCH.removeAttribute("disabled");
                 }
-                inputCH.value = 1
+                inputCH.value = 1;
             }
         }
         function checkSSID(ssid) {
-            if (ssid == "") {
-                alert("Digite o SSID!!")
-                return false
+            if (ssid === "") {
+                alert("Digite o SSID!!");
+                return false;
             } else {
-                return true
+                return true;
             }
         }
         function checkPW(password) {
-            if (password == "" || password.length < 8) {
-                alert("Digite uma senha com mais de oito caracteres!!")
-                return false
+            if (password === "" || password.length < 8) {
+                alert("Digite uma senha com mais de oito caracteres!!");
+                return false;
             } else {
-                return true
+                return true;
             }
         }
         function checkCH(ch) {
             if (ch < 1 || ch > 12) {
-                alert("Informe um canal entre 1 e 12")
-                return false
+                alert("Informe um canal entre 1 e 12");
+                return false;
             }
         }
         function createJSON() {
 
-            let isOnly2 = document.getElementById('only2').checked,
-                isOnly5 = document.getElementById("only5").checked,
-                isOther5 = document.getElementById('other5').checked,
-                isSSID = document.querySelector('.opt-ssid').checked,
-                isCH = document.querySelector('.opt-canal').checked,
-                isPW = document.querySelector('.opt-pw').checked,
-                ssid = document.getElementById('ssid').value,
-                password = document.getElementById('password').value
-                ch = document.getElementById('canal').value
+            let isOnly2 = document.querySelector(".only2").checked;
+            let isOnly5 = document.querySelector(".only5").checked;
+            let isOther5 = document.querySelector(".other5").checked || undefined;
+            let isSSID = document.querySelector(".opt-ssid").checked;
+            let isCH = document.querySelector(".opt-canal").checked;
+            let isPW = document.querySelector(".opt-pw").checked;
+            let ssid = document.getElementById("ssid").value;
+            let password = document.getElementById("password").value;
+            let ch = document.getElementById("canal").value;
 
-            let chkSSID = undefined,
-                chkPW = undefined,
-                chkCH = undefined
+            let chkSSID = undefined;
+            let chkPW = undefined;
+            let chkCH = undefined;
 
-            reset5G()
-            reset2G()
-            limparResultado()
+            reset5G();
+            reset2G();
+            limparResultado();
 
             if(isSSID && isPW) {
-                chkSSID = checkSSID(ssid)
-                chkPW = checkPW(password)
+                chkSSID = checkSSID(ssid);
+                chkPW = checkPW(password);
             } else if(isSSID) {
-                chkSSID = checkSSID(ssid)
+                chkSSID = checkSSID(ssid);
             } else if(isPW) {
-                chkPW = checkPW(password)
+                chkPW = checkPW(password);
             } else if(isCH){
-                chkCH = checkCH(ch)
+                chkCH = checkCH(ch);
             } else {
-                chkSSID = false
-                alert("Selecione no minimo uma opção")
+                chkSSID = false;
+                alert("Selecione no minimo uma opção");
             }
 
-            if(chkSSID != false && chkPW != false) {
+            if(chkSSID !== false && chkPW !== false) {
 
-                const createWifi2 = (ssid1, password1) => JSON.stringify({ index: "1", ssid: ssid1, password: password1 })
-                const createWifi2CH = (ssid1, password1, ch) => JSON.stringify({ index: "1", ssid: ssid1, password: password1, channel: ch})
-                const createWifi5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`, password: password1 })
-                const createOnly5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: ssid1, password: password1 })
-                const createSSID2 = (ssid1) => JSON.stringify({ index: "1", ssid: ssid1})
-                const createSSID2CH = (ssid1, ch) => JSON.stringify({ index: "1", ssid: ssid1, channel: ch})
-                const createSSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`})
-                const createOnlySSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: ssid1})
-                const createPW2 = (password1) => JSON.stringify({ index: "1", password: password1 })
-                const createPW2CH = (password1, ch) => JSON.stringify({ index: "1", password: password1, channel: ch })
-                const createPW5 = (password1) => JSON.stringify({ index: "5", password: password1 })
-                const createCH = (ch) => JSON.stringify({ index: "1", channel: ch })
-                
+                const createWifi2 = (ssid1, password1) => JSON.stringify({ index: "1", ssid: ssid1, password: password1 });
+                const createWifi2CH = (ssid1, password1, ch) => JSON.stringify({ index: "1", ssid: ssid1, password: password1, channel: ch});
+                const createWifi5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`, password: password1 });
+                const createOnly5 = (ssid1, password1) => JSON.stringify({ index: "5", ssid: ssid1, password: password1 });
+                const createSSID2 = (ssid1) => JSON.stringify({ index: "1", ssid: ssid1});
+                const createSSID2CH = (ssid1, ch) => JSON.stringify({ index: "1", ssid: ssid1, channel: ch});
+                const createSSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: `${ssid1}-5G`});
+                const createOnlySSID5 = (ssid1) => JSON.stringify({ index: "5", ssid: ssid1});
+                const createPW2 = (password1) => JSON.stringify({ index: "1", password: password1 });
+                const createPW2CH = (password1, ch) => JSON.stringify({ index: "1", password: password1, channel: ch });
+                const createPW5 = (password1) => JSON.stringify({ index: "5", password: password1 });
+                const createCH = (ch) => JSON.stringify({ index: "1", channel: ch });
+                let result;
                 if (isOnly2) {
-                    let result
-
-                    if(isCH && chkCH != false){
+                    if(isCH && chkCH !== false){
                         if (isSSID && isPW) {
-                        result = createWifi2CH(ssid, password, ch)
+                        result = createWifi2CH(ssid, password, ch);
                         } else if (isSSID) {
-                            result = createSSID2CH(ssid, ch)
+                            result = createSSID2CH(ssid, ch);
                         } else if (isPW){
-                            result = createPW2CH(password, ch)
+                            result = createPW2CH(password, ch);
                        } else {
-                            result = createCH(ch)
+                            result = createCH(ch);
                        }
                     }
                     else {
                         if (isSSID && isPW) {
-                            result = createWifi2(ssid, password)
+                            result = createWifi2(ssid, password);
                         } else if (isSSID) {
-                            result = createSSID2(ssid)
+                            result = createSSID2(ssid);
                         } else {
-                            result = createPW2(password)
+                            result = createPW2(password);
                         }
                     }
-                    document.getElementById('result2').setAttribute('value', result)
-                    document.getElementById('btn-result5').setAttribute('disabled', 'disabled')
+                    document.getElementById("result2").setAttribute("value", result);
+                    document.getElementById("btn-result5").setAttribute("disabled", "disabled");
                 } else if (isOnly5) {
-                    let result
                     if (isSSID && isPW) {
-                        result = createOnly5(ssid, password)
+                        result = createOnly5(ssid, password);
                     } else if (isSSID) {
-                        result = createOnlySSID5(ssid)
+                        result = createOnlySSID5(ssid);
                     } else {
-                        result = createPW5(password)
+                        result = createPW5(password);
                     }
-                    document.getElementById('result5').setAttribute('value', result)
-                    document.getElementById('btn-result2').setAttribute('disabled', 'disabled')
+                    document.getElementById("result5").setAttribute("value", result);
+                    document.getElementById("btn-result2").setAttribute("disabled", "disabled");
                 } else if (isOther5) {
-                    let result2
-                    let result5
-                    let ssid5 = document.getElementById('ssid5').value
-                    let pw5 = document.getElementById('password5').value
-                    
+                    let result2;
+                    let result5;
+                    let ssid5 = document.getElementById("ssid5").value;
+                    let pw5 = document.getElementById("password5").value;
                     if(isSSID && isPW) {
-                        chkSSID = checkSSID(ssid5)
-                        chkPW = checkPW(pw5)
+                        chkSSID = checkSSID(ssid5);
+                        chkPW = checkPW(pw5);
                     } else if(isSSID) {
-                        chkSSID = checkSSID(ssid5)
+                        chkSSID = checkSSID(ssid5);
                     } else {
-                        chkPW = checkPW(pw5)
-                    }       
-
-                    if(chkSSID != false && chkPW != false){
-                        
+                        chkPW = checkPW(pw5);
+                    }
+                    if(chkSSID !== false && chkPW !== false){
                         if (isCH) {
                             if (isSSID && isPW) {
-                                result2 = createWifi2CH(ssid, password, ch)
-                                result5 = createOnly5(ssid5, pw5)
+                                result2 = createWifi2CH(ssid, password, ch);
+                                result5 = createOnly5(ssid5, pw5);
                             } else if (isSSID) {
-                                result2 = createSSID2CH(ssid, ch)
-                                result5 = createOnly5(ssid5)
+                                result2 = createSSID2CH(ssid, ch);
+                                result5 = createOnly5(ssid5);
                             } else {
-                                result2 = createPW2CH(password, ch)
-                                result5 = createPW5(pw5)
-                            } 
+                                result2 = createPW2CH(password, ch);
+                                result5 = createPW5(pw5);
+                            }
                         } else {
-                            console.log("AQUI");
                             if (isSSID && isPW) {
-                                result2 = createWifi2(ssid, password)
-                                result5 = createOnly5(ssid5, pw5)
+                                result2 = createWifi2(ssid, password);
+                                result5 = createOnly5(ssid5, pw5);
                             } else if (isSSID) {
-                                result2 = createSSID2(ssid)
-                                result5 = createOnly5(ssid5)
+                                result2 = createSSID2(ssid);
+                                result5 = createOnly5(ssid5);
                             } else {
-                                result2 = createPW2(password)
-                                result5 = createPW5(pw5)
-                            }   
+                                result2 = createPW2(password);
+                                result5 = createPW5(pw5);
+                            }
                         }
-
-                    } 
-                    document.getElementById('result2').setAttribute('value', result2)
-                    document.getElementById('result5').setAttribute('value', result5)
+                    }
+                    document.getElementById("result2").setAttribute("value", result2);
+                    document.getElementById("result5").setAttribute("value", result5);
                 } else {
-                        let result2
-                        let result5
+                        let result2;
+                        let result5;
                         if (isCH) {
                             if (isSSID && isPW) {
-                                result2 = createWifi2CH(ssid, password, ch)
-                                result5 = createWifi5(ssid, password)
+                                result2 = createWifi2CH(ssid, password, ch);
+                                result5 = createWifi5(ssid, password);
                             } else if (isSSID) {
                                 result2 = createSSID2CH(ssid, ch)
                                 result5 = createSSID5(ssid)
@@ -432,65 +415,70 @@
                                 result5 = createPW5(password)
                             } 
                         }
-                        document.getElementById('result2').setAttribute('value', result2)
-                        document.getElementById('result5').setAttribute('value', result5)
+                        document.getElementById("result2").setAttribute("value", result2);
+                        document.getElementById("result5").setAttribute("value", result5);
                     }
             }
         }
         function addDisabled() {
-            const btn2 = document.getElementById("btn-result2")
-            const btn5 = document.getElementById("btn-result5")
-            btn2.setAttribute("disabled", "disabled")
-            btn5.setAttribute("disabled", "disabled")
+            const btn2 = document.getElementById("btn-result2");
+            const btn5 = document.getElementById("btn-result5");
+            btn2.setAttribute("disabled", "disabled");
+            btn5.setAttribute("disabled", "disabled");
         }
         function removeDisabled(btn) {
-            if(btn.hasAttribute('disabled')) {
-                    btn.removeAttribute('disabled')
+            if(btn.hasAttribute("disabled")) {
+                    btn.removeAttribute("disabled");
                 }
         }
         function reset2G(){
-            const btn2 = document.getElementById('btn-result2')
-            btn2.innerHTML = 'Copiar 2.4GHz'
-            removeDisabled(btn2)
+            const btn2 = document.getElementById("btn-result2");
+            btn2.setAttribute("class", "btn btn-primary");
+            btn2.innerHTML = "Copiar 2.4GHz";
+            removeDisabled(btn2);
         }
         function reset5G(){
-            const btn5 = document.getElementById('btn-result5')
-            btn5.innerHTML = 'Copiar 5.0GHz'
-            removeDisabled(btn5)
+            const btn5 = document.getElementById("btn-result5");
+            btn5.setAttribute("class", "btn btn-primary");
+            btn5.innerHTML = "Copiar 5.0GHz";
+            removeDisabled(btn5);
         }
         function limparDados() {
-            let ssid2G = document.getElementById('ssid')
-            let password2G = document.getElementById('password')
-            ssid2G.value = ''
-            password2G.value = ''
+            let ssid2G = document.getElementById("ssid");
+            let password2G = document.getElementById("password");
+            ssid2G.value = "";
+            password2G.value = "";
 
-            let ssid5G = document.getElementById('ssid5') || undefined
-            let password5G = document.getElementById('password5') || undefined
-            if(ssid5G != undefined) {
-                ssid5G.value = ''
-                password5G.value = ''
+            let ssid5G = document.getElementById("ssid5") || undefined;
+            let password5G = document.getElementById("password5") || undefined;
+            if(ssid5G !== undefined) {
+                ssid5G.value = "";
+                password5G.value = "";
             }
         }
         function limparResultado() {
-            document.getElementById('result2').setAttribute('value', '')
-            document.getElementById('result5').setAttribute('value', '')
+            document.getElementById("result2").setAttribute("value", "");
+            document.getElementById("result5").setAttribute("value", "");
         }
         function cleanBtnCopy(rede) {
-            if (rede == 'result2') {
-                document.getElementById('btn-result2').innerHTML = "Copiado!"
-                reset5G()
-                setTimeout(reset2G, 500)
+            if (rede === "result2") {
+                let resultado2 = document.querySelector("#btn-result2");
+                resultado2.innerHTML = "Copiado!";
+                resultado2.setAttribute("class", "btn btn-success");
+                reset5G();
+                setTimeout(reset2G, 500);
             } else {
-                document.getElementById('btn-result5').innerHTML = "Copiado!"
-                setTimeout(reset5G, 500)
+                let resultado5 = document.querySelector("#btn-result5");
+                resultado5.innerHTML = "Copiado!";
+                resultado5.setAttribute("class", "btn btn-success");
+                setTimeout(reset5G, 500);
             }
         }
         function copy(rede) {
-            
-            const txt = document.getElementById(rede)
-            txt.select()
-            document.execCommand("copy")
-            cleanBtnCopy(rede)
+            const txt = document.getElementById(rede);
+            txt.select();
+            document.execCommand("copy");
+            cleanBtnCopy(rede);
         }
     </script>
 </body>
