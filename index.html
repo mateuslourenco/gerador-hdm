@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador HDM</title>
+    <title>Easy HDM</title>
+    <link rel="shortcut icon" href="favicon_created_by_logaster.ico" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
     <style>
         * {
@@ -55,25 +56,42 @@
     </style>
 </head>
 <nav class="nav nav-pills flex-column flex-sm-row mt-1">
-    <a class="flex-sm-fill text-sm-center nav-link active" aria-current="page" href="redes.html">Redes</a>
-    <a class="flex-sm-fill text-sm-center nav-link" href="portas.html">Portas</a>
-    <a class="flex-sm-fill text-sm-center nav-link" href="sip.html">SIP</a>
+    <a class="flex-sm-fill text-sm-center nav-link active botao" aria-current="page" href="redes.html">Redes</a>
+    <a class="flex-sm-fill text-sm-center nav-link botao" href="portas.html">Portas</a>
+    <a class="flex-sm-fill text-sm-center nav-link botao" href="sip.html">SIP</a>
   </nav>
 <body>
     <main class="border border-primary rounded" id="conteudo">
-        
+        <div class="text-center">
+            <h2></h2>
+            <p></p>
+            <figure>
+                <img src="horizontal_on_white_by_logaster.png" alt="logo">
+            </figure>
+        </div>
     </main>
     <footer class="text-center"><a class="text-decoration-none text-primary" href="mailto:mateus.lourenco@telefonica.com">Desenvolvido por Mateus Lourenço</a></footer>
     <script>
-        document.querySelectorAll('a').forEach(link =>{
-            const conteudo = document.querySelector('#conteudo');
-            link.onclick = function(e){
-                e.preventDefault();
-                fetch(link.href)
-                    .then(resp => resp.text())
-                    .then(html => conteudo.innerHTML = html)
+        window.onload = function() {
+            let btnNav = document.querySelector(".nav");
+            let btns = btnNav.querySelectorAll(".botao")
+            for (var i = 0; i < btns.length; i++) {
+                btns[i].addEventListener("click", function() {
+                    var current = document.getElementsByClassName("active");
+                    current[0].className = current[0].className.replace(" active", "");
+                    this.className += " active";
+                });
             }
-        })
+            document.querySelectorAll('a').forEach(link =>{
+                const conteudo = document.querySelector('#conteudo');
+                link.onclick = function(e){
+                    e.preventDefault();
+                    fetch(link.href)
+                        .then(resp => resp.text())
+                        .then(html => conteudo.innerHTML = html)
+                }
+            })
+        }
     </script>
     <script src="script.js"></script>
 </body>
