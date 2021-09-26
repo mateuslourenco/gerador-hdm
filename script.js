@@ -3,7 +3,8 @@ function createInputSSID5G(parent) {
     Object.assign(ssid5, {
         id: "ssid5",
         placeholder: "SSID 5.0GHz",
-        type: "text"
+        type: "text",
+        class: "um-sete-dois",
     });
     let isSSID = document.querySelector(".opt-ssid").checked;
     if(!isSSID) {
@@ -16,7 +17,8 @@ function createInputPassword5G(parent) {
     Object.assign(pw5, {
         id: "password5",
         placeholder: "Password 5.0GHz",
-        type: "text"
+        type: "text",
+        class: "um-sete-dois",
     });
     let isPW = document.querySelector(".opt-pw").checked;
     if(!isPW) {
