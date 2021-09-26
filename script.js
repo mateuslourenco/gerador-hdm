@@ -341,11 +341,16 @@ function cleanBtnCopy(rede) {
         resultado2.setAttribute("class", "btn btn-success");
         reset5G();
         setTimeout(reset2G, 500);
-    } else {
+    } else if (rede === "result5") {
         let resultado5 = document.querySelector("#btn-result5");
         resultado5.innerHTML = "Copiado!";
         resultado5.setAttribute("class", "btn btn-success");
         setTimeout(reset5G, 500);
+    } else if (rede === "resultado-voip") {
+        let sip = document.querySelector("#btn-sip");
+        sip.innerHTML = "Copiado!";
+        sip.setAttribute("class", "btn btn-success")
+        setTimeout(resetSIP, 500);
     }
 }
 function copy(rede) {
@@ -353,4 +358,59 @@ function copy(rede) {
     txt.select();
     document.execCommand("copy");
     cleanBtnCopy(rede);
+}
+
+function resetSIP(){
+    const btn_sip = document.getElementById("btn-sip");
+    btn_sip.setAttribute("class", "btn btn-primary");
+    btn_sip.innerHTML = "Copiar";
+    removeDisabled(btn_sip);
+}
+
+function criarSIP(){
+    const dir_numero = document.querySelector("#dir-numero").value;
+    const user_name = document.querySelector("#user-name").value;
+    const auth_password = document.querySelector("#auth-password").value;
+    const proxy_sv = document.querySelector("#proxy-sv").value;
+    const registrar_sv = document.querySelector("#registrar-sv").value;
+    const user_agent = document.querySelector("#user-agent").value;
+    const outbound_proxy = document.querySelector("#outbound-proxy").value;
+    const phy_ref = document.querySelector("#phy-ref").value;
+
+    const acao = document.querySelector(".set-voip").checked;
+
+    const cancel_voip = (numero) => JSON.stringify({directoryNumber: numero});
+    const criar_voip = (dir_numero, user_name, auth_password, proxy_sv, registrar_sv,
+                        user_agent, outbound_proxy, phy_ref
+                        ) => JSON.stringify({
+                            "DirectoryNumber": dir_numero,
+	                        "AuthUserName": user_name,
+	                        "AuthPassword": auth_password,
+	                        "ProxyServer": proxy_sv,
+	                        "RegistrarServer": registrar_sv,
+	                        "UserAgentDomain": user_agent,	
+	                        "OutboundProxy": outbound_proxy,
+	                        "phyReferenceList": phy_ref
+                        })
+
+    const resultado = document.querySelector("#resultado-voip");
+    let voip = '';
+    if(acao === true) {
+        voip = criar_voip(
+            dir_numero,
+            user_name,
+            auth_password,
+            proxy_sv,
+            registrar_sv,
+            user_agent,
+            outbound_proxy,
+            phy_ref
+        )
+        resultado.setAttribute("value", voip)
+    }
+    else{
+        voip = cancel_voip(dir_numero);
+        resultado.setAttribute("value", voip);
+    }
+    resetSIP();
 }
