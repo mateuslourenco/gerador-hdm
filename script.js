@@ -349,8 +349,13 @@ function cleanBtnCopy(rede) {
     } else if (rede === "resultado-voip") {
         let sip = document.querySelector("#btn-sip");
         sip.innerHTML = "Copiado!";
-        sip.setAttribute("class", "btn btn-success")
+        sip.setAttribute("class", "btn btn-success");
         setTimeout(resetSIP, 500);
+    } else {
+        let port = document.querySelector("#btn-port");
+        port.innerHTML = "Copiado!";
+        port.setAttribute("class", "btn btn-success");
+        setTimeout(resetPort, 500)
     }
 }
 function copy(rede) {
@@ -360,13 +365,19 @@ function copy(rede) {
     cleanBtnCopy(rede);
 }
 
+
 function resetSIP(){
     const btn_sip = document.getElementById("btn-sip");
     btn_sip.setAttribute("class", "btn btn-primary");
     btn_sip.innerHTML = "Copiar";
     removeDisabled(btn_sip);
 }
-
+function resetPort(){
+    const btn_port = document.getElementById("btn-port");
+    btn_port.setAttribute("class", "btn btn-primary");
+    btn_port.innerHTML = "Copiar";
+    removeDisabled(btn_port);
+}
 function criarSIP(){
     const dir_numero = document.querySelector("#dir-numero").value;
     const user_name = document.querySelector("#user-name").value;
@@ -391,7 +402,7 @@ function criarSIP(){
 	                        "UserAgentDomain": user_agent,	
 	                        "OutboundProxy": outbound_proxy,
 	                        "phyReferenceList": phy_ref
-                        })
+                        });
 
     const resultado = document.querySelector("#resultado-voip");
     let voip = '';
@@ -405,12 +416,100 @@ function criarSIP(){
             user_agent,
             outbound_proxy,
             phy_ref
-        )
-        resultado.setAttribute("value", voip)
+        );
+        resultado.setAttribute("value", voip);
     }
     else{
         voip = cancel_voip(dir_numero);
         resultado.setAttribute("value", voip);
     }
     resetSIP();
+}
+
+function checkOptSIP(){
+    acao = document.querySelector(".set-voip").checked;
+
+    const user_name = document.querySelector("#user-name");
+    const auth_password = document.querySelector("#auth-password");
+    const proxy_sv = document.querySelector("#proxy-sv");
+    const registrar_sv = document.querySelector("#registrar-sv");
+    const user_agent = document.querySelector("#user-agent");
+    const outbound_proxy = document.querySelector("#outbound-proxy");
+
+    if (acao === true){
+        document.querySelectorAll(".opcoes-sip").forEach(e => {e.removeAttribute("disabled", "disabled")});
+    } else {
+        document.querySelectorAll(".opcoes-sip").forEach(e => {e.setAttribute("disabled", "disabled")});
+    }
+}
+
+function regraDePortas(){
+    const udp = document.querySelector(".opt-udp").checked;
+    const tcp = document.querySelector(".opt-tcp").checked;
+
+    const internal_client = document.querySelector("#ip-interno").value;
+    const internal_port = document.querySelector("#porta-interna").value;
+    const external_port = document.querySelector("#porta-externa").value;
+    const port_name = document.querySelector("#port-name").value;
+
+    const criar_udp_tcp = (internal_client, internal_port,
+                            external_port, port_name) => JSON.stringify({
+                                "enable":"true",
+                                "internalClient":internal_client,
+                                "internalPort":internal_port,
+                                "externalPort":external_port,
+                                "portMapName":port_name,
+                                "protocol":"TCP,UDP"
+                            });
+    const criar_tcp = (internal_client, internal_port,
+                            external_port, port_name) => JSON.stringify({
+                                "enable":"true",
+                                "internalClient":internal_client,
+                                "internalPort":internal_port,
+                                "externalPort":external_port,
+                                "portMapName":port_name,
+                                "protocol":"TCP"
+                            });
+    const criar_udp = (internal_client, internal_port,
+                            external_port, port_name) => JSON.stringify({
+                                "enable":"true",
+                                "internalClient":internal_client,
+                                "internalPort":internal_port,
+                                "externalPort":external_port,
+                                "portMapName":port_name,
+                                "protocol":"UDP"
+                            });
+
+    let validar_infos;
+    let result;
+    const info_portas = document.querySelectorAll(".porta");
+    info_portas.forEach(e => {
+        if(e.value === ""){
+            validar_infos = false;
+        } else {
+            validar_infos = true;
+        }
+    });
+
+    if (validar_infos === true) {
+        if (udp && tcp) {
+            result = criar_udp_tcp(internal_client, internal_port,
+                external_port, port_name)
+        } else if (udp){
+            result = criar_udp(internal_client, internal_port,
+                external_port, port_name)
+        } else if (tcp){
+            result = criar_tcp(internal_client, internal_port,
+                external_port, port_name)
+        } else {
+            alert("Selecione ao menos um protocolo!");
+        }
+    } else {
+        alert("Informe todas as opções de rede!")
+    }
+    if (result != undefined) {
+        document.querySelector("#result-port").value = result
+        resetPort();
+    }
+
 }

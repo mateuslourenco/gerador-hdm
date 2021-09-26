@@ -1,43 +1,32 @@
 <h1 class="text-center">Portas</h1>
 <fieldset class="border p-2 mb-1">
-    <legend>Ação</legend>
-    <div class="form-check">
-        <input class="form-check-input padrao" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-        <label class="form-check-label" for="flexRadioDefault1">
-            Habilitar
-        </label>
-    </div>
-    <div class="form-check">
-        <input class="form-check-input only2" type="radio" name="flexRadioDefault" id="flexRadioDefault2"">
-        <label class="form-check-label" for="flexRadioDefault2">
-            Desabilitar
-        </label>
-    </div>
-</fieldset>
-<fieldset class="border p-2 mb-1">
     <legend>Protocolo</legend>
     <div class="form-check">
-        <input class="form-check-input opt-ssid" type="checkbox" id="defaultCheck1" checked>
+        <input class="form-check-input opt-udp" type="checkbox" id="defaultCheck1" checked>
         <label class="form-check-label" for="defaultCheck1">
             UDP
         </label>
     </div>
     <div class="form-check">
-        <input class="form-check-input opt-pw" type="checkbox" id="defaultCheck2" checked>
+        <input class="form-check-input opt-tcp" type="checkbox" id="defaultCheck2" checked>
         <label class="form-check-label" for="defaultCheck2">
             TCP
         </label>
     </div>
-    <div id="gerador">
-        <input type="text" id="ip-interno" placeholder="IP Interno">
-        <input type="text" class="mb-1" id="porta-interna" placeholder="Porta interna">
-        <input type="text" class="mb-1" id="porta-externa" placeholder="Porta externa">
-        <button type="button" class="btn btn-primary" id="create">Gerar</button>
+</fieldset>
+<fieldset class="border p-2 mb-1">
+    <legend>Informações da rede</legend>
+    <div>
+        <input type="text" class="um-sete-dois porta" id="port-name" placeholder="Nome da regra">
     </div>
+        <input type="text" class="mb-1 um-sete-dois porta" id="ip-interno" placeholder="IP Interno">
+        <input type="text" class="mb-1 um-sete-dois porta" id="porta-interna" placeholder="Porta interna">
+        <input type="text" class="mb-1 um-sete-dois porta" id="porta-externa" placeholder="Porta externa">
+        <button type="button" class="btn btn-primary mb-1" id="create" onclick="regraDePortas()">Gerar</button>
     <div id="resultado">
         <div id="doisQuPontoatro">
-            <input type="text" id="result" readonly="readonly">
-            <button type="button" class="btn btn-primary" id="btn-result2" disabled="disabled">Copiar 2.4GHz</button>
+            <input type="text" id="result-port" readonly="readonly">
+            <button type="button" class="btn btn-primary" id="btn-port" disabled="disabled" onclick="copy('result-port')">Copiar</button>
         </div>
     </div>
 </fieldset>
